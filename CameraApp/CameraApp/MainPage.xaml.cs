@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,10 @@ namespace CameraApp
         {
             var scan = new ZXingScannerPage();
             await Navigation.PushAsync(scan);
+
+            //Sleep Off
+            DependencyService.Get<ISleepTasks>().ExecuteTask("cannotSleep");
+
             scan.OnScanResult += (result) =>
             {
                 Device.BeginInvokeOnMainThread(async () =>
@@ -27,6 +32,9 @@ namespace CameraApp
                     await Navigation.PopAsync();
                     //Show Result
                     mycode.Text = result.Text;
+
+                    //Sleep On
+                    DependencyService.Get<ISleepTasks>().ExecuteTask("canSleep");
                 });
             };
         }
